@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DealCraft AI</title>
+
+    <!-- 🛡️ FOUC Prevention: Apply dark class BEFORE React mounts -->
+    <script>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && systemDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-0qcXoyLL.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BfwSAh_H.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
