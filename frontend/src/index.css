@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "ui-sans-serif", "system-ui";
+}
+
+/* Enable class-based dark mode for Tailwind v4 */
+@variant dark (&:where(.dark, .dark *));
+
+/* ───────────────────────────────────────────────────
+   View Transitions API — Radial Theme Toggle
+   ─────────────────────────────────────────────────── */
+
+/* 1. Kill the default cross-fade so our clip-path animation is the ONLY effect */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* 2. Layer the new snapshot on top so the circular reveal covers the old one.
+      The old snapshot sits behind, fully visible, as a static "background". */
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 9999;
+}
