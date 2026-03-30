@@ -10,7 +10,7 @@ const gameRoute=Router();
 gameRoute.post("/start",authMiddleware,startGame)
 gameRoute.post("/offer",authMiddleware,makeOffer)
 gameRoute.get("/product",authMiddleware,getAllProducts)
-gameRoute.get("/leaderboard",authMiddleware,getLeaderboard)
+gameRoute.get("/leaderboard",getLeaderboard)
 gameRoute.get("/:sessionId",authMiddleware,getSession)
 
 
