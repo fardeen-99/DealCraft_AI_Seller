@@ -86,9 +86,12 @@ const Home = () => {
 
             <div
 
-              onClick={() => navigate("/login")}
+           
               className="flex flex-col sm:flex-row items-center gap-5 justify-center lg:justify-start">
-              <button className="w-full sm:w-auto px-10 py-5 rounded-full bg-indigo-600 text-white font-bold shadow-2xl shadow-indigo-500/20 hover:bg-indigo-700 hover:-translate-y-1 transition-all">
+              <button
+              
+                 onClick={() => navigate("/login")}
+              className="w-full sm:w-auto px-10 py-5 rounded-full bg-indigo-600 text-white font-bold shadow-2xl shadow-indigo-500/20 hover:bg-indigo-700 hover:-translate-y-1 transition-all">
                 {user ? "Go to Dashboard" : "Start Playing Now"}
               </button>
               <button 
