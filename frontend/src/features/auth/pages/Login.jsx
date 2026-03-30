@@ -5,41 +5,40 @@ import useAuth from "../hooks/auth.hook"
 import { useTheme } from "../../../context/ThemeContext"
 import { useSelector } from "react-redux"
 
-const Login=()=>{
+const Login = () => {
 
-    const navigate=useNavigate();
-    const {handleLogin}=useAuth();
+    const navigate = useNavigate();
+    const { handleLogin } = useAuth();
 
-    const [form,setForm]=useState({
-        email:"",
-        password:""
+    const [form, setForm] = useState({
+        email: "",
+        password: ""
     })
 
-    const submiter=async(e)=>{
+    const submiter = async (e) => {
         e.preventDefault();
         await handleLogin(form);
         setForm({
-            email:"",
-            password:""
+            email: "",
+            password: ""
         })
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
     }
-const {theme}=useTheme()
+    const { theme } = useTheme()
 
-const {user}=useSelector((state)=>state.auth)
+    const { user } = useSelector((state) => state.auth)
 
-if(user){
- return   <Navigate to="/dashboard"/>
-}
+    if (user) {
+        return <Navigate to="/dashboard" />
+    }
 
-    return(
-            <div
-  className={`relative min-h-screen overflow-hidden ${
-    theme === "dark"
-      ? "bg-[radial-gradient(circle_at_top,_#1a1a2e_0%,_#16213e_35%,_#0f3460_66%,_#000000_100%)] text-white"
-      : "bg-[radial-gradient(circle_at_top,_#f8f1ff_0%,_#f0f7ff_35%,_#efd8ff_66%,_#5b1f83_100%)] text-slate-900"
-  } px-4 py-8 sm:px-6 lg:px-8`}
->
+    return (
+        <div
+            className={`relative min-h-screen overflow-hidden ${theme === "dark"
+                    ? "bg-[radial-gradient(circle_at_top,_#1a1a2e_0%,_#16213e_35%,_#0f3460_66%,_#000000_100%)] text-white"
+                    : "bg-[radial-gradient(circle_at_top,_#f8f1ff_0%,_#f0f7ff_35%,_#efd8ff_66%,_#5b1f83_100%)] text-slate-900"
+                } px-4 py-8 sm:px-6 lg:px-8`}
+        >
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
                 <div className="absolute left-[-8rem] top-[-6rem] h-56 w-56 rounded-full bg-white/35 blur-3xl" />
                 <div className="absolute bottom-[-10rem] right-[-4rem] h-80 w-80 rounded-full bg-fuchsia-300/25 blur-3xl" />
@@ -49,7 +48,7 @@ if(user){
             <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl items-center">
                 <div className="grid w-full overflow-hidden rounded-[2rem] border border-white/40 bg-white/12 shadow-[0_30px_120px_rgba(76,29,149,0.28)] backdrop-blur-xl lg:grid-cols-[1.05fr_0.95fr]">
                     <section className="relative flex min-h-[360px] flex-col  overflow-hidden p-6 text-white sm:p-8 lg:p-10">
-                       
+
                         <div className="relative flex flex-col items-start h-full w-full justify-start">
                             <h1 className="mt-4 text-sm font-black leading-none tracking-tight sm:text-2xl">
                                 Negotiate with style,
@@ -57,8 +56,8 @@ if(user){
                             </h1>
                         </div>
 
-                   
-<img src="/photo3.jpg" alt="" className="absolute   bottom-0 right-0 w-full h-full object-cover z-[-10]" />
+
+                        <img src="/photo3.jpg" alt="" className="absolute   bottom-0 right-0 w-full h-full object-cover z-[-10]" />
 
                     </section>
 
@@ -93,7 +92,7 @@ if(user){
                                         placeholder="you@example.com"
                                         autoComplete="email"
                                         value={form.email}
-                                        onChange={(e)=>setForm({...form,email:e.target.value})}
+                                        onChange={(e) => setForm({ ...form, email: e.target.value })}
                                     />
                                 </label>
                                 <label className="flex flex-col gap-2">
@@ -104,7 +103,7 @@ if(user){
                                         placeholder="Enter your password"
                                         autoComplete="current-password"
                                         value={form.password}
-                                        onChange={(e)=>setForm({...form,password:e.target.value})}
+                                        onChange={(e) => setForm({ ...form, password: e.target.value })}
                                     />
                                 </label>
 

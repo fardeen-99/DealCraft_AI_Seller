@@ -72,21 +72,21 @@ const GameSession = () => {
     <div className="h-screen bg-[#fafbff] dark:bg-black font-sans flex flex-col transition-colors duration-500 overflow-hidden">
 
       {/* --- Top Navigation / Product HUD --- */}
-      <header className="relative z-20 border-b border-slate-100 dark:border-white/5 bg-white/70 dark:bg-black/70 backdrop-blur-2xl px-6 py-4 flex items-center justify-between">
+      <header className="relative z-20 border-b border-slate-100 dark:border-white/5 bg-white/70 dark:bg-black/70 backdrop-blur-2xl px-6 py-4 flex gap-3 items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to="/dashboard" className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded-xl transition-colors">
-            <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" /></svg>
+            <svg className="w-6 h-6 text-transparent  md:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" /></svg>
           </Link>
           <div className="flex items-center gap-3">
             <img src={sessionData.product.image || "/placeholder.jpg"} className="w-10 h-10 rounded-lg object-cover border border-slate-100 dark:border-white/10" alt="" />
             <div>
-              <h2 className="text-sm font-black text-slate-800 dark:text-white leading-tight">{sessionData.product.title}</h2>
-              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-tight">Asking Price: ${sessionData.product.basePrice?.toLocaleString()}</p>
+              <h2 className="text-sm font-black text-slate-800  dark:text-white leading-tight">{sessionData.product.title}</h2>
+              <p className="text-[10px] pt-1 text-slate-400 font-bold uppercase tracking-widest leading-relaxed md:leading-tight">Asking Price: ${sessionData.product.basePrice?.toLocaleString()}</p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-8 ">
           <div className="text-right hidden sm:block">
             <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Current Deal</p>
             <p className="text-lg font-black text-indigo-600 dark:text-indigo-400 tracking-tighter">${sessionData.currentPrice?.toLocaleString()}</p>
@@ -101,7 +101,7 @@ const GameSession = () => {
           </div>
           
           {/* Minimal Logout Button */}
-          <button 
+          {/* <button 
             onClick={handleLogout}
             className="p-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 hover:border-red-200 dark:hover:border-red-500/20 transition-all active:scale-95"
             title="Logout"
@@ -109,7 +109,7 @@ const GameSession = () => {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-          </button>
+          </button> */}
         </div>
       </header>
 
@@ -118,14 +118,14 @@ const GameSession = () => {
         <div className="max-w-4xl mx-auto w-full flex flex-col gap-8">
           {messages.map((msg, i) => (
             <div key={i} className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}>
-              <div className={`max-w-[80%] p-5 rounded-2xl shadow-sm leading-relaxed text-sm font-medium ${msg.sender === "user"
+              <div className={`max-w-[80%] p-5 rounded-2xl break-words shadow-sm leading-relaxed text-sm font-medium ${msg.sender === "user"
                   ? "bg-indigo-600 text-white rounded-tr-sm"
                   : "bg-white dark:bg-slate-900/50 text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-white/5 rounded-tl-sm"
                 }`}>
                 {msg.message}
               </div>
               {msg.offer && (
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-2 px-1">
+                <span className="text-[10px] font-bold break-words text-slate-400 uppercase tracking-widest mt-2 px-1">
                   {msg.sender === "user" ? "Your Offer" : "AI Counter"}: ${msg.offer?.toLocaleString()}
                 </span>
               )}
@@ -168,14 +168,14 @@ const GameSession = () => {
                 placeholder="Persuade the seller..."
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-4 px-6 pr-27 text-sm font-medium text-slate-800 dark:text-white focus:outline-none focus:ring-2  focus:ring-indigo-500/20 transition-all"
+                className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-4 px-6 pr-35 text-sm font-medium text-slate-800 dark:text-white focus:outline-none focus:ring-2  focus:ring-indigo-500/20 transition-all"
               />
               <button
                 type="submit"
                 disabled={loading || !offer || !message}
                 className="absolute right-2 top-2 bottom-2 px-6 rounded-xl bg-indigo-600 text-white font-black text-xs uppercase tracking-widest hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                Send
+                {loading ? "Thinking..." : "Send"}
               </button>
             </div>
           </form>

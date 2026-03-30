@@ -14,16 +14,13 @@ const Home = () => {
   const handleScroll = (ref) => {
     ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-
+  const { user } = useSelector((state) => state.auth);
   const { leaderboard } = useSelector((state) => state.game);
 
   const { handleGetleaderboard } = useGame();
 
   useEffect(() => {
-    const fetchLeaderboard = async () => {
-      await handleGetleaderboard();
-    };
-    fetchLeaderboard();
+    handleGetleaderboard();
   }, []);
 
 
@@ -52,10 +49,18 @@ const Home = () => {
         </div>
 
         <div className="flex items-center gap-6">
-          <Link to="/login" className="cursor-pointer text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors hidden sm:block">Login</Link>
-          <Link to="/register" className="text-xs font-bold uppercase tracking-widest px-7 py-3 rounded-full bg-slate-900 dark:bg-white text-white dark:text-black hover:scale-105 active:scale-95 transition-all text-center">
-            Get Started
-          </Link>
+          {user ? (
+            <Link to="/dashboard" className="text-xs font-bold uppercase tracking-widest px-7 py-3 rounded-full bg-indigo-600 text-white hover:scale-105 active:scale-95 transition-all text-center shadow-lg shadow-indigo-500/20">
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link to="/login" className="cursor-pointer text-xs font-bold uppercase tracking-widest text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors hidden sm:block">Login</Link>
+              <Link to="/register" className="text-xs font-bold uppercase tracking-widest px-7 py-3 rounded-full bg-slate-900 dark:bg-white text-white dark:text-black hover:scale-105 active:scale-95 transition-all text-center">
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
@@ -80,11 +85,11 @@ const Home = () => {
             </p>
 
             <div
-            
-            onClick={() => navigate("/login")}
-             className="flex flex-col sm:flex-row items-center gap-5 justify-center lg:justify-start">
+
+              onClick={() => navigate("/login")}
+              className="flex flex-col sm:flex-row items-center gap-5 justify-center lg:justify-start">
               <button className="w-full sm:w-auto px-10 py-5 rounded-full bg-indigo-600 text-white font-bold shadow-2xl shadow-indigo-500/20 hover:bg-indigo-700 hover:-translate-y-1 transition-all">
-                Start Playing Now
+                {user ? "Go to Dashboard" : "Start Playing Now"}
               </button>
               <button className="w-full sm:w-auto px-10 py-5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 font-bold shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3 group">
                 <svg className="w-5 h-5 text-indigo-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" /></svg>
@@ -169,7 +174,7 @@ const Home = () => {
                 { step: "03", title: "Master", desc: "Apply logical pressure to win." },
                 { step: "04", title: "Victory", desc: "Save big and rank globally." }
               ].map((item, i) => (
-                <div key={i} className="group text-left">
+                <div key={i} className="group text-left cursor-pointer">
                   <div className="text-7xl font-black text-white/5 mb-4 group-hover:text-indigo-500/20 transition-colors">{item.step}</div>
                   <h4 className="text-2xl font-black mb-3">{item.title}</h4>
                   <p className="text-slate-500 font-medium leading-relaxed">{item.desc}</p>
@@ -195,11 +200,12 @@ const Home = () => {
 
               {/* ── RANK 2 ── */}
               {leaderboard[1] && (() => {
-                const saved = leaderboard[1].product?.basePrice - leaderboard[1].finalPrice;
-                const margin = ((saved / leaderboard[1].product?.basePrice) * 100);
+                const item = leaderboard[1];
+                const saved = (item.productId?.basePrice || 0) - (item.finalPrice || 0);
+                const margin = item.productId?.basePrice ? ((saved / item.productId.basePrice) * 100).toFixed(1) : 0;
                 return (
                   <div className="w-full lg:w-[28%] order-2 lg:order-1 lg:translate-y-8">
-                    <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-100 dark:border-white/5 rounded-[2rem] p-8 flex flex-col relative shadow-xl overflow-hidden">
+                    <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-100 dark:border-white/5 rounded-[2rem] p-8 flex flex-col relative shadow-xl overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
                       {/* Subtle top stripe */}
                       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-slate-300 to-slate-400 dark:from-slate-600 dark:to-slate-500 rounded-t-[2rem]" />
 
@@ -212,12 +218,24 @@ const Home = () => {
                           </div>
                         </div>
                         <div className="px-3 py-1 rounded-full bg-slate-100 dark:bg-white/5 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest border border-slate-200 dark:border-white/10">
-                          {leaderboard[1].rounds} Rounds
+                          {item.rounds} Rounds
                         </div>
                       </div>
+                      
+                      {item.productId?.image && (
+                         <div className="w-full h-32 rounded-xl overflow-hidden mb-4 relative ring-1 ring-black/5 dark:ring-white/10">
+                           <img src={item.productId.image} alt={item.productId.title || "Product"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                           <p className="absolute bottom-2 left-3 right-3 text-white text-xs font-bold truncate">{item.productId.title}</p>
+                         </div>
+                      )}
 
-                      <h4 className="text-xl font-black text-slate-900 dark:text-white text-center truncate">{(leaderboard[1].user?.username || "Anonymous").toUpperCase()}</h4>
-
+                      <h4 className="text-2xl font-black text-slate-900 dark:text-white text-center truncate mb-2 mt-2">{(item.user?.username || "Anonymous").toUpperCase()}</h4>
+                      
+                      {/* <div className="flex justify-between items-center text-xs mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div className="text-slate-500 dark:text-slate-400 font-medium">Final Price: <span className="font-bold text-slate-800 dark:text-slate-200">${item.finalPrice?.toLocaleString()}</span></div>
+                        <div className="text-emerald-500 font-bold bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-md">-{margin}% Deal</div>
+                      </div> */}
 
                     </div>
                   </div>
@@ -226,33 +244,56 @@ const Home = () => {
 
               {/* ── RANK 1 ── */}
               {leaderboard[0] && (() => {
-                const saved = leaderboard[0].product?.basePrice - leaderboard[0].finalPrice;
-                const margin = ((saved / leaderboard[0].product?.basePrice) * 100);
+                const item = leaderboard[0];
+                const saved = (item.productId?.basePrice || 0) - (item.finalPrice || 0);
+                const margin = item.productId?.basePrice ? ((saved / item.productId.basePrice) * 100).toFixed(1) : 0;
                 return (
-                  <div className="w-full lg:w-[38%] order-1 lg:order-2">
-                    <div className="relative bg-gradient-to-b from-indigo-500/10 via-purple-500/5 to-transparent dark:from-indigo-500/[0.08] dark:to-transparent border border-indigo-400/30 dark:border-indigo-500/20 backdrop-blur-2xl rounded-[2.5rem] p-10 flex flex-col overflow-hidden ">
-                      {/* Crown glow */}
-                      {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-yellow-400/20 blur-[60px] rounded-full pointer-events-none" /> */}
+                  <div className="w-full lg:w-[38%] order-1 lg:order-2 z-10">
+                    <div className="relative bg-gradient-to-b from-indigo-500/10 via-purple-500/5 to-transparent dark:from-indigo-500/[0.08] dark:to-transparent border border-indigo-400/30 dark:border-indigo-500/20 backdrop-blur-2xl rounded-[2.5rem] p-10 flex flex-col overflow-hidden group hover:-translate-y-2 transition-transform duration-300 shadow-2xl">
                       {/* Golden stripe */}
-                      <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-yellow-400 via-amber-300 to-yellow-500 rounded-t-[2.5rem]" />
+                      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 rounded-t-[2.5rem]" />
 
                       <div className="flex items-center justify-between mb-8">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-300 to-amber-400 flex items-center justify-center text-2xl ">👑</div>
+                          <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-yellow-300 to-amber-400 flex items-center justify-center text-2xl shadow-lg shadow-yellow-500/20">
+                            👑
+                            <div className="absolute inset-0 bg-yellow-400 rounded-2xl animate-ping opacity-20"></div>
+                          </div>
                           <div>
                             <p className="text-[9px] font-black text-yellow-500 uppercase tracking-[0.25em]">Champion</p>
                             <p className="text-slate-900 dark:text-white font-black">Global #01</p>
                           </div>
                         </div>
                         <div className="px-3 py-1.5 rounded-full bg-indigo-600 text-white text-[9px] font-black uppercase tracking-widest shadow-lg shadow-indigo-500/20">
-                          Elite Negotiator
+                          {item.rounds} Rounds
                         </div>
                       </div>
+                      
+                      {item.productId?.image && (
+                         <div className="w-full h-40 rounded-2xl overflow-hidden mb-6 relative ring-1 ring-black/5 dark:ring-white/10 shadow-lg">
+                           <img src={item.productId.image} alt={item.productId.title || "Product"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                           <div className="absolute bottom-3 left-4 right-4">
+                              <p className="text-white text-sm font-black truncate">{item.productId.title}</p>
+                              <p className="text-white/80 text-[10px] uppercase tracking-wider mt-0.5">Base: ${item.productId.basePrice?.toLocaleString()}</p>
+                           </div>
+                         </div>
+                      )}
 
-                      <h4 className="text-3xl text-center font-black text-slate-900 dark:text-white tracking-tighter truncate">{(leaderboard[0].user?.username || "Champion").toUpperCase()}</h4>
-                      <p className="text-slate-500 dark:text-slate-400 text-center font-medium text-sm truncate mt-1">{(leaderboard[0].product?.title)}</p>
+                      <h4 className="text-3xl text-center font-black text-slate-900 dark:text-white tracking-tighter truncate mt-2">{(item.user?.username || "Champion").toUpperCase()}</h4>
+                      <p className="text-indigo-600 dark:text-indigo-400 text-center font-bold text-xs uppercase tracking-widest mb-4 mt-2">Elite Negotiator</p>
 
-               
+                      {/* <div className="flex justify-between items-center text-sm mt-2 pt-5 border-t border-indigo-500/10 dark:border-indigo-500/20">
+                        <div className="flex flex-col">
+                           <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1">Final Price</span>
+                           <span className="text-slate-900 dark:text-white font-black text-lg">${item.finalPrice?.toLocaleString()}</span>
+                        </div>
+                        <div className="flex flex-col items-end">
+                           <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-1">Saved</span>
+                           <span className="text-emerald-500 font-black text-lg bg-emerald-50 dark:bg-emerald-500/10 px-3 flex items-center justify-center rounded-lg shadow-sm">-{margin}%</span>
+                        </div>
+                      </div> */}
+
                     </div>
                   </div>
                 );
@@ -260,11 +301,12 @@ const Home = () => {
 
               {/* ── RANK 3 ── */}
               {leaderboard[2] && (() => {
-                const saved = leaderboard[2].product?.basePrice - leaderboard[2].finalPrice;
-                const margin = ((saved / leaderboard[2].product?.basePrice) * 100);
+                const item = leaderboard[2];
+                const saved = (item.productId?.basePrice || 0) - (item.finalPrice || 0);
+                const margin = item.productId?.basePrice ? ((saved / item.productId.basePrice) * 100).toFixed(1) : 0;
                 return (
                   <div className="w-full lg:w-[28%] order-3 lg:translate-y-8">
-                    <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-100 dark:border-white/5 rounded-[2rem] p-8 flex flex-col relative shadow-xl overflow-hidden">
+                    <div className="bg-white dark:bg-slate-900/60 backdrop-blur-xl border border-slate-100 dark:border-white/5 rounded-[2rem] p-8 flex flex-col relative shadow-xl overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
                       {/* Top stripe */}
                       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-300 to-amber-400 rounded-t-[2rem]" />
 
@@ -277,11 +319,25 @@ const Home = () => {
                           </div>
                         </div>
                         <div className="px-3 py-1 rounded-full bg-slate-100 dark:bg-white/5 text-[9px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest border border-slate-200 dark:border-white/10">
-                          {leaderboard[2].rounds} Rounds
+                          {item.rounds} Rounds
                         </div>
                       </div>
+                      
+                      {item.productId?.image && (
+                         <div className="w-full h-32 rounded-xl overflow-hidden mb-4 relative ring-1 ring-black/5 dark:ring-white/10">
+                           <img src={item.productId.image} alt={item.productId.title || "Product"} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                           <p className="absolute bottom-2 left-3 right-3 text-white text-xs font-bold truncate">{item.productId.title}</p>
+                         </div>
+                      )}
 
-                      <h4 className="text-xl font-black text-slate-900 dark:text-white text-center truncate">{(leaderboard[2].user?.username || "Anonymous").toUpperCase()}</h4>
+                      <h4 className="text-2xl font-black text-slate-900 dark:text-white text-center truncate mb-2 mt-2">{(item.user?.username || "Anonymous").toUpperCase()}</h4>
+                      
+                      {/* <div className="flex justify-between items-center text-xs mt-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <div className="text-slate-500 dark:text-slate-400 font-medium">Final Price: <span className="font-bold text-slate-800 dark:text-slate-200">${item.finalPrice?.toLocaleString()}</span></div>
+                        <div className="text-emerald-500 font-bold bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-md">-{margin}% Deal</div>
+                      </div> */}
+
                     </div>
                   </div>
                 );
@@ -303,8 +359,10 @@ const Home = () => {
             <h2 className="text-5xl md:text-8xl font-black text-white dark:text-black tracking-tighter mb-12 relative z-10 leading-[0.85]">
               Ready to <br /> Outsmart?
             </h2>
-            <Link to="/register" className="inline-block relative z-10 px-12 py-6 rounded-full bg-white dark:bg-black text-black dark:text-white font-black text-xl hover:scale-110 active:scale-95 transition-transform duration-300">
-              Join the Arena
+            <Link to={user ? "/dashboard" : "/register"} className="inline-block relative z-10 px-12 py-6 rounded-full bg-white dark:bg-black text-black dark:text-white font-black text-xl hover:scale-110 active:scale-95 transition-transform duration-300 whitespace-nowrap">
+              {/* {user ? "Enter Dashboard" : "Join the Arena"}
+               */}
+               Join the Arena
             </Link>
           </div>
         </section>

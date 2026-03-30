@@ -11,7 +11,7 @@ export const useGame = () => {
         try {
             dispatch(setloading(true));
             const response = await getleaderboard();
-            dispatch(setleaderboard(response.leaderboard));
+            dispatch(setleaderboard(response.board));
             dispatch(setloading(false));
         } catch (error) {
             dispatch(seterror(error?.response?.data?.message || "Failed to fetch leaderboard"));

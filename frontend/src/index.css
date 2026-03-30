@@ -26,3 +26,7 @@
 ::view-transition-new(root) {
   z-index: 9999;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}

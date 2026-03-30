@@ -3,7 +3,7 @@ import Session from "../models/session.model.js";
 import Product from "../models/product.model.js";
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
-
+import Leaderboard from "../models/leaderboard.js";
 export const startGame = async (req, res) => {
   try {
     const { productId } = req.body;
@@ -158,6 +158,13 @@ export const makeOffer = async (req, res) => {
     if (result.accept) {
       session.status = "won";
       session.finalPrice = result.counterPrice;
+      const leaderboard=new Leaderboard({
+        user:req.user.id,
+        rounds:session.rounds,
+        productId:session.productId,
+        finalPrice: result.counterPrice
+      })
+      await leaderboard.save();
     } else if (session.rounds >= session.maxRounds) {
       session.status = "lost";
     }
@@ -243,29 +250,34 @@ export const getAllProducts = async (req, res) => {
 export const getLeaderboard = async (req, res) => {
   try {
 
-    // 🔥 1. Top sessions (won only) with product info populated
-    const sessions = await Session.find({ status: "won" })
-      .populate("productId", "title image basePrice")
-      .sort({ finalPrice: 1 }) // lowest price first
-      .limit(10);
+    // // 🔥 1. Top sessions (won only) with product info populated
+    // const sessions = await Session.find({ status: "won" })
+    //   .populate("productId", "title image basePrice")
+    //   .sort({ finalPrice: 1 }) // lowest price first
+    //   .limit(10)
 
-    // 🔥 2. Format response
-    const leaderboard = sessions.map((s) => ({
-      sessionId: s._id,
-      finalPrice: s.finalPrice,
-      rounds: s.rounds,
-      user: s.user,
+    // console.log(sessions)
 
-      product: {
-        title: s.productId?.title,
-        image: s.productId?.image,
-        basePrice: s.productId?.basePrice
-      }
-    }));
+    // // 🔥 2. Format response
+    // const leaderboard = sessions.map((s) => ({
+    //   sessionId: s._id,
+    //   finalPrice: s.finalPrice,
+    //   rounds: s.rounds,
+    //   user: s.user,
 
-    console.log(leaderboard.product)
+    //   product: {
+    //     title: s.productId?.title,
+    //     image: s.productId?.image,
+    //     basePrice: s.productId?.basePrice
+    //   }
+    // }));
 
-    res.json({ leaderboard, success: true, message: "Leaderboard fetched successfully" });
+    // console.log(leaderboard.product)
+
+
+    const board=await Leaderboard.find().populate("user","username").populate("productId","title image basePrice").sort({finalPrice:1}).limit(10).select("user productId rounds")
+
+    res.json({ board, success: true, message: "Leaderboard fetched successfully" });
 
   } catch (error) {
     console.error(error);

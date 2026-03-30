@@ -5,44 +5,43 @@ import useAuth from "../hooks/auth.hook"
 import { useTheme } from "../../../context/ThemeContext"
 import { useSelector } from "react-redux"
 
-const Register=()=>{
+const Register = () => {
 
-    const navigate=useNavigate();
-    const {handleRegister}=useAuth();
+    const navigate = useNavigate();
+    const { handleRegister } = useAuth();
 
-    const [form,setForm]=useState({
-        username:"",
-        email:"",
-        password:""
+    const [form, setForm] = useState({
+        username: "",
+        email: "",
+        password: ""
     })
 
-    const submiter=async(e)=>{
+    const submiter = async (e) => {
         e.preventDefault();
         await handleRegister(form);
         setForm({
-            username:"",
-            email:"",
-            password:""
+            username: "",
+            email: "",
+            password: ""
         })
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
     }
 
-const {theme}=useTheme()
+    const { theme } = useTheme()
 
-const {user}=useSelector((state)=>state.auth)
+    const { user } = useSelector((state) => state.auth)
 
-if(user){
-   return <Navigate to="/dashboard"/>
-}
+    if (user) {
+        return <Navigate to="/dashboard" />
+    }
 
-    return(
+    return (
         <div
-  className={`relative min-h-screen overflow-hidden ${
-    theme === "dark"
-      ? "bg-[radial-gradient(circle_at_top,_#1a1a2e_0%,_#16213e_35%,_#0f3460_66%,_#000000_100%)] text-white"
-      : "bg-[radial-gradient(circle_at_top,_#f8f1ff_0%,_#f0f7ff_35%,_#efd8ff_66%,_#5b1f83_100%)] text-slate-900"
-  } px-4 py-8 sm:px-6 lg:px-8`}
->
+            className={`relative min-h-screen overflow-hidden ${theme === "dark"
+                    ? "bg-[radial-gradient(circle_at_top,_#1a1a2e_0%,_#16213e_35%,_#0f3460_66%,_#000000_100%)] text-white"
+                    : "bg-[radial-gradient(circle_at_top,_#f8f1ff_0%,_#f0f7ff_35%,_#efd8ff_66%,_#5b1f83_100%)] text-slate-900"
+                } px-4 py-8 sm:px-6 lg:px-8`}
+        >
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
                 <div className="absolute right-[-6rem] top-[-5rem] h-52 w-52 rounded-full bg-white/30 blur-3xl" />
                 <div className="absolute bottom-[-12rem] left-[-5rem] h-96 w-96 rounded-full bg-pink-300/20 blur-3xl" />
@@ -52,9 +51,9 @@ if(user){
             <div className="relative mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl items-center">
                 <div className="grid w-full overflow-hidden rounded-[2rem] border border-white/40 bg-white/12 shadow-[0_30px_120px_rgba(76,29,149,0.28)] backdrop-blur-xl lg:grid-cols-[1.05fr_0.95fr]">
                     <section className="relative flex min-h-[360px] flex-col justify-between overflow-hiddep-6 text-white sm:p-8 lg:p-10">
-                     
 
-<img src="/photo4.jpg" alt="" className="absolute   bottom-0 right-0 w-full h-full object-cover z-[-10]" />
+
+                        <img src="/photo4.jpg" alt="" className="absolute   bottom-0 right-0 w-full h-full object-cover z-[-10]" />
 
                         <div className="relative flex items-center justify-between">
                             {/* <div>
@@ -62,20 +61,20 @@ if(user){
                                 <p className="mt-2 text-xs uppercase tracking-[0.28em] text-cyan-100/80">Launch Sequence</p>
                             </div> */}
                             <div>
-{/* 
+                                {/* 
                                <p className="text-sm font-medium uppercase tracking-[0.35em] text-fuchsia-100/80">Create your account</p>
                                <h1 className="mt-4 text-sm font-black leading-none tracking-tight sm:text-2xl">
                                 Enter the arena with
                                 <span className="mt-2 block text-cyan-200">a standout first impression.</span>
                             </h1> */}
                             </div>
-                       
-                            <div className="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-white/80">
+
+                            <div className="mt-2 mr-2 sm:mt-0 sm:mr-0 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.25em] text-white/80">
                                 Register
                             </div>
                         </div>
 
-                        
+
                     </section>
 
                     <section className="bg-white/88 p-6 backdrop-blur-xl sm:p-8 lg:p-10">
@@ -109,7 +108,7 @@ if(user){
                                         placeholder="Choose a username"
                                         autoComplete="username"
                                         value={form.username}
-                                        onChange={(e)=>setForm({...form,username:e.target.value})}
+                                        onChange={(e) => setForm({ ...form, username: e.target.value })}
                                     />
                                 </label>
                                 <label className="flex flex-col gap-2">
@@ -120,7 +119,7 @@ if(user){
                                         placeholder="you@example.com"
                                         autoComplete="email"
                                         value={form.email}
-                                        onChange={(e)=>setForm({...form,email:e.target.value})}
+                                        onChange={(e) => setForm({ ...form, email: e.target.value })}
                                     />
                                 </label>
                                 <label className="flex flex-col gap-2">
@@ -131,7 +130,7 @@ if(user){
                                         placeholder="Create a password"
                                         autoComplete="new-password"
                                         value={form.password}
-                                        onChange={(e)=>setForm({...form,password:e.target.value})}
+                                        onChange={(e) => setForm({ ...form, password: e.target.value })}
                                     />
                                 </label>
 
