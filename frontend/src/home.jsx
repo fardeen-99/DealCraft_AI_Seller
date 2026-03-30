@@ -91,7 +91,10 @@ const Home = () => {
               <button className="w-full sm:w-auto px-10 py-5 rounded-full bg-indigo-600 text-white font-bold shadow-2xl shadow-indigo-500/20 hover:bg-indigo-700 hover:-translate-y-1 transition-all">
                 {user ? "Go to Dashboard" : "Start Playing Now"}
               </button>
-              <button className="w-full sm:w-auto px-10 py-5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 font-bold shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3 group">
+              <button 
+              onClick={()=>window.open("https://www.linkedin.com/posts/mohd-fardeen-b31307358_ai-machinelearning-reactjs-activity-7444373285255163905-ErQd?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFkI2ZUBq4qXUikQw1Kyeat8B4yjgN397jE", "_blank")}
+              
+              className="w-full sm:w-auto px-10 py-5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 font-bold shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-3 group">
                 <svg className="w-5 h-5 text-indigo-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" /></svg>
                 Watch Trailer
               </button>
